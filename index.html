@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>大观通宝 · 九百年的时光之旅</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;600;700;900&family=Noto+Serif+SC:wght@300;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-snap-type:y mandatory;overflow-y:scroll;scroll-behavior:smooth}
+body{background:#0a0a0f;color:#e8e0d0;font-family:'Noto Serif SC','STSong','SimSun',serif;overflow-x:hidden}
+::-webkit-scrollbar{width:0}
+
+/* ---- Coin CSS Art ---- */
+.coin{width:160px;height:160px;border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#d4a54a,#8b6914 40%,#6b4e0a 70%,#4a3508);position:relative;box-shadow:0 0 60px rgba(180,140,60,.3),inset 0 0 30px rgba(0,0,0,.5);margin:0 auto}
+.coin::before{content:"大观";position:absolute;top:28px;left:50%;transform:translateX(-50%);font-size:22px;font-weight:900;letter-spacing:6px;color:#3a2a08;text-shadow:0 1px 0 rgba(200,160,80,.5),0 -1px 0 rgba(0,0,0,.8)}
+.coin::after{content:"通宝";position:absolute;top:58px;left:50%;transform:translateX(-50%);font-size:22px;font-weight:900;letter-spacing:6px;color:#3a2a08;text-shadow:0 1px 0 rgba(200,160,80,.5),0 -1px 0 rgba(0,0,0,.8)}
+.coin-hole{width:24px;height:24px;background:radial-gradient(circle,#1a1a2e,#0a0a0f);border-radius:2px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:inset 0 0 4px rgba(0,0,0,1),0 0 2px rgba(200,160,80,.3)}
+.coin-ring{width:140px;height:140px;border:3px solid rgba(100,75,30,.8);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.coin-inner{width:30px;height:30px;border:2px solid rgba(100,75,30,.6);border-radius:2px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+.coin-sm{width:80px;height:80px}
+.coin-sm::before{font-size:12px;top:12px;letter-spacing:3px}
+.coin-sm::after{font-size:12px;top:28px;letter-spacing:3px}
+.coin-sm .coin-hole{width:14px;height:14px}
+.coin-sm .coin-ring{width:70px;height:70px;border-width:2px}
+.coin-sm .coin-inner{width:18px;height:18px;border-width:1.5px}
+
+.coin-spin{animation:coinSpin 8s linear infinite}
+@keyframes coinSpin{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+
+/* ---- Section Base ---- */
+.section{min-height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;position:relative;overflow:hidden}
+
+/* ---- Particles ---- */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.particle{position:absolute;background:rgba(200,160,80,.4);border-radius:50%;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+
+/* ---- Fade Animations ---- */
+.fade-up{opacity:0;transform:translateY(40px);transition:all 1.2s cubic-bezier(.25,.46,.45,.94)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-in{opacity:0;transition:opacity 1.5s ease}
+.fade-in.visible{opacity:1}
+.delay-1{transition-delay:.2s}
+.delay-2{transition-delay:.4s}
+.delay-3{transition-delay:.6s}
+.delay-4{transition-delay:.8s}
+.delay-5{transition-delay:1s}
+.delay-6{transition-delay:1.2s}
+
+/* ---- Cover ---- */
+#cover{background:radial-gradient(ellipse at center,#1a1520 0%,#0a0a0f 70%)}
+.cover-title{font-size:clamp(36px,8vw,64px);font-weight:200;letter-spacing:.3em;color:#c9a961;text-shadow:0 0 40px rgba(180,140,60,.3);margin-bottom:16px}
+.cover-sub{font-size:clamp(14px,3vw,18px);color:#8a7a60;letter-spacing:.5em;font-weight:300;margin-bottom:40px}
+.cover-year{font-size:14px;color:#5a5040;letter-spacing:.3em;margin-top:40px}
+.cover-hint{position:absolute;bottom:40px;font-size:12px;color:#3a3530;letter-spacing:.2em;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+
+/* ---- Gold Line Divider ---- */
+.gold-line{width:60px;height:1px;background:linear-gradient(90deg,transparent,#c9a961,transparent);margin:20px auto}
+
+/* ---- Chapter Title ---- */
+.chapter-num{font-size:12px;color:#5a5040;letter-spacing:.5em;text-transform:uppercase;margin-bottom:8px}
+.chapter-title{font-size:clamp(24px,6vw,40px);font-weight:600;color:#c9a961;letter-spacing:.15em;margin-bottom:12px}
+.chapter-subtitle{font-size:clamp(13px,2.5vw,16px);color:#7a6a50;font-weight:300;letter-spacing:.1em}
+
+/* ---- Emperor Section ---- */
+#emperor{background:linear-gradient(180deg,#0a0a0f 0%,#14101a 50%,#0a0a0f 100%)}
+.emperor-quote{max-width:500px;text-align:center;font-size:clamp(14px,3vw,18px);line-height:2;color:#b0a080;font-weight:300;margin:30px auto;font-style:italic}
+.emperor-desc{max-width:560px;text-align:center;font-size:clamp(13px,2.5vw,15px);line-height:2.2;color:#7a7060;font-weight:300}
+
+/* ---- Calligraphy Section ---- */
+#calligraphy{background:radial-gradient(ellipse at 50% 30%,#1a1510 0%,#0a0a0f 70%)}
+.char-showcase{display:flex;justify-content:center;gap:clamp(16px,4vw,32px);margin:30px 0;flex-wrap:wrap}
+.char-box{width:clamp(60px,15vw,90px);height:clamp(60px,15vw,90px);display:flex;align-items:center;justify-content:center;font-size:clamp(32px,8vw,52px);font-weight:900;color:#c9a961;background:rgba(200,160,80,.05);border:1px solid rgba(200,160,80,.15);border-radius:4px;position:relative}
+.char-label{font-size:10px;color:#5a5040;position:absolute;bottom:-20px;letter-spacing:.15em}
+.char-desc{max-width:500px;text-align:center;font-size:clamp(13px,2.5vw,15px);line-height:2.2;color:#8a7a60;font-weight:300}
+
+/* ---- Era Section ---- */
+#era{background:linear-gradient(180deg,#0a0a0f 0%,#0f0a14 50%,#0a0a0f 100%)}
+.era-timeline{max-width:480px;width:100%;margin:30px auto}
+.era-item{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.era-dot{width:10px;height:10px;border-radius:50%;background:#c9a961;flex-shrink:0;margin-top:6px;box-shadow:0 0 12px rgba(200,160,80,.4)}
+.era-dot.dim{background:#3a3530;box-shadow:none}
+.era-content{font-size:clamp(13px,2.5vw,15px);line-height:1.8;color:#8a7a60}
+.era-content strong{color:#c9a961;font-weight:600}
+.era-content.dim{color:#5a5040}
+
+/* ---- Casting Section ---- */
+#casting{background:radial-gradient(ellipse at 50% 60%,#15120e 0%,#0a0a0f 70%)}
+.casting-steps{max-width:500px;width:100%;margin:30px auto}
+.step{display:flex;gap:16px;align-items:flex-start;margin-bottom:24px}
+.step-num{width:28px;height:28px;border-radius:50%;border:1px solid rgba(200,160,80,.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:#c9a961;flex-shrink:0}
+.step-text{font-size:clamp(13px,2.5vw,15px);line-height:1.9;color:#8a7a60;font-weight:300}
+.step-text strong{color:#b0a080}
+
+/* ---- Decline Section ---- */
+#decline{background:linear-gradient(180deg,#0a0a0f 0%,#140a0a 50%,#0a0a0f 100%)}
+.decline-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:460px;width:100%;margin:24px auto}
+.decline-card{padding:16px;border:1px solid rgba(180,80,80,.15);border-radius:8px;background:rgba(180,80,80,.03);text-align:center}
+.decline-card:nth-child(odd){border-color:rgba(200,160,80,.15);background:rgba(200,160,80,.03)}
+.decline-card .icon{font-size:24px;margin-bottom:8px}
+.decline-card .label{font-size:12px;color:#7a6a60;letter-spacing:.1em;margin-bottom:4px}
+.decline-card .text{font-size:clamp(12px,2.5vw,14px);line-height:1.6;color:#8a7a60}
+.decline-quote{max-width:440px;text-align:center;font-size:clamp(14px,3vw,17px);line-height:2;color:#a08070;font-weight:300;margin-top:24px;font-style:italic}
+
+/* ---- Yijing Section ---- */
+#yijing{background:radial-gradient(ellipse at 50% 40%,#0e1018 0%,#0a0a0f 70%)}
+.yijing-hex{display:flex;flex-direction:column;align-items:center;gap:6px;margin:24px 0}
+.yi-line{display:flex;gap:8px}
+.yi-yang{width:clamp(50px,12vw,80px);height:4px;background:#c9a961;border-radius:2px;box-shadow:0 0 8px rgba(200,160,80,.3)}
+.yi-yin{display:flex;gap:clamp(6px,2vw,12px)}
+.yi-yin span{width:clamp(18px,5vw,32px);height:4px;background:#c9a961;border-radius:2px;box-shadow:0 0 8px rgba(200,160,80,.3)}
+.yi-divider{width:1px;height:16px;background:rgba(200,160,80,.2)}
+.yijing-text{max-width:460px;text-align:center;font-size:clamp(13px,2.5vw,15px);line-height:2.2;color:#8a8a9a;font-weight:300}
+.yijing-classic{font-size:clamp(15px,3.5vw,20px);color:#a0a0c0;font-weight:400;letter-spacing:.15em;margin:20px 0}
+.yijing-hint{font-size:clamp(13px,2.5vw,16px);color:#9090b0;font-weight:400;line-height:2;margin:16px 0}
+
+/* ---- Sleep Section ---- */
+#sleep{background:linear-gradient(180deg,#0a0a0f 0%,#08080e 50%,#0a0a0f 100%)}
+.sleep-timeline{max-width:400px;width:100%;margin:24px auto}
+.sleep-dot{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.sleep-year{font-size:13px;color:#5a5a60;width:80px;flex-shrink:0;text-align:right}
+.sleep-bar{height:2px;background:linear-gradient(90deg,#2a2a30,#3a3a40);flex:1;border-radius:1px;position:relative}
+.sleep-bar.active{background:linear-gradient(90deg,#c9a961,#8a6a30)}
+.sleep-label{font-size:12px;color:#5a5a60;margin-left:12px;width:80px;flex-shrink:0}
+
+/* ---- Ending Section ---- */
+#ending{background:radial-gradient(ellipse at 50% 50%,#14120e 0%,#0a0a0f 70%)}
+.ending-text{max-width:440px;text-align:center;font-size:clamp(14px,3vw,17px);line-height:2.4;color:#b0a080;font-weight:300;margin:24px auto}
+.ending-poem{font-size:clamp(15px,3vw,18px);color:#c9a961;line-height:2.6;text-align:center;letter-spacing:.1em;font-weight:400}
+.ending-credit{text-align:center;margin-top:40px;font-size:12px;color:#3a3530;letter-spacing:.2em}
+.scroll-container{height:calc(100vh - 100px);overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
+.scroll-container .section{min-height:100vh}
+.typewriter{overflow:hidden;white-space:nowrap;border-right:2px solid #c9a961;animation:blink .8s step-end infinite}
+@keyframes blink{50%{border-color:transparent}}
+@media(max-width:480px){
+  .decline-grid{grid-template-columns:1fr}
+  .sleep-dot{flex-wrap:wrap}
+  .sleep-year{width:100%;text-align:center}
+  .sleep-label{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="scroll-container">
+
+<!-- ═══════ 封面 ═══════ -->
+<div class="section" id="cover">
+  <div class="fade-up" style="margin-bottom:32px">
+    <div class="coin" style="perspective:800px">
+      <div class="coin-hole"></div>
+      <div class="coin-ring"></div>
+      <div class="coin-inner"></div>
+    </div>
+  </div>
+  <div class="cover-title fade-up delay-1">大观通宝</div>
+  <div class="cover-sub fade-up delay-2">九百年的时光之旅</div>
+  <div class="gold-line fade-up delay-3"></div>
+  <div class="cover-year fade-up delay-4">北宋 · 大观元年 · 公元一一〇七年</div>
+  <div class="cover-hint">↑ 下滑开始 ↑</div>
+</div>
+
+<!-- ═══════ 壹 · 帝王笔墨 ═══════ -->
+<div class="section" id="emperor">
+  <div class="chapter-num fade-up">壹</div>
+  <div class="chapter-title fade-up delay-1">帝王笔墨</div>
+  <div class="chapter-subtitle fade-up delay-2">一个皇帝的书法，铸造在一枚钱币上</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="emperor-quote fade-up delay-3">
+    "他可能是中国历史上最有才华的皇帝，<br>却也是最不合格的帝王。"
+  </div>
+  <div class="emperor-desc fade-up delay-4">
+    宋徽宗赵佶，一位被皇位耽误的艺术家。他独创瘦金体，笔画如铁画银钩，锋利而挺拔。他将自己的书法刻在了帝国的货币上——这在中国历史上极为罕见。
+    <br><br>
+    大观通宝，便是他御笔亲书的产物。四个字，方寸之间，尽显帝王气度。
+  </div>
+</div>
+
+<!-- ═══════ 贰 · 铁画银钩 ═══════ -->
+<div class="section" id="calligraphy">
+  <div class="chapter-num fade-up">贰</div>
+  <div class="chapter-title fade-up delay-1">铁画银钩</div>
+  <div class="chapter-subtitle fade-up delay-2">瘦金体的四个字</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="char-showcase fade-up delay-3">
+    <div class="char-box" id="charDa">
+      大
+      <span class="char-label">劲挺开张</span>
+    </div>
+    <div class="char-box" id="charGuan">
+      观
+      <span class="char-label">锋利如匕</span>
+    </div>
+    <div class="char-box" id="charTong">
+      通
+      <span class="char-label">流畅下行</span>
+    </div>
+    <div class="char-box" id="charBao">
+      宝
+      <span class="char-label">稳正宽绰</span>
+    </div>
+  </div>
+  <div class="char-desc fade-up delay-4">
+    仅二十五毫米的圆面上，四个字疏密得当，笔笔如刀。<br>
+    "观"字末笔锋利如匕首——这是后世鉴定真伪的核心观察点。<br>
+    仿品此处常显绵软无力，真品则锐利干脆，一气呵成。
+  </div>
+</div>
+
+<!-- ═══════ 叁 · 大观之年 ═══════ -->
+<div class="section" id="era">
+  <div class="chapter-num fade-up">叁</div>
+  <div class="chapter-title fade-up delay-1">大观之年</div>
+  <div class="chapter-subtitle fade-up delay-2">公元一一〇七年，世界看上去很美</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="era-timeline fade-up delay-3">
+    <div class="era-item">
+      <div class="era-dot"></div>
+      <div class="era-content"><strong>经济</strong>　GDP占世界总量的四分之一以上，汴京人口超过百万，是当时世界上最繁华的城市</div>
+    </div>
+    <div class="era-item">
+      <div class="era-dot"></div>
+      <div class="era-content"><strong>文化</strong>　苏轼、黄庭坚、米芾、蔡京——一个时代的文人巨星同时闪耀</div>
+    </div>
+    <div class="era-item">
+      <div class="era-dot"></div>
+      <div class="era-content"><strong>艺术</strong>　徽宗建立皇家画院，独创瘦金体，中国美学达到一个高峰</div>
+    </div>
+    <div class="era-item">
+      <div class="era-dot"></div>
+      <div class="era-content"><strong>科技</strong>　活字印刷术广泛应用，指南针用于航海，火药武器初现</div>
+    </div>
+    <div class="era-item" style="margin-top:28px">
+      <div class="era-dot dim"></div>
+      <div class="era-content dim">然而危机已在暗处酝酿——蔡京专权、花石纲耗尽国库、边防空虚……</div>
+    </div>
+    <div class="era-item">
+      <div class="era-dot dim"></div>
+      <div class="era-content dim">方腊起义正在酝酿之中。这个帝国，金玉其外。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ 肆 · 翻砂铸铜 ═══════ -->
+<div class="section" id="casting">
+  <div class="chapter-num fade-up">肆</div>
+  <div class="chapter-title fade-up delay-1">翻砂铸铜</div>
+  <div class="chapter-subtitle fade-up delay-2">一枚钱币的诞生</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="casting-steps fade-up delay-3">
+    <div class="step">
+      <div class="step-num">壹</div>
+      <div class="step-text"><strong>御书钱文</strong><br>宋徽宗亲笔书写"大观通宝"四字瘦金体</div>
+    </div>
+    <div class="step">
+      <div class="step-num">贰</div>
+      <div class="step-text"><strong>雕刻雕母</strong><br>宫廷工匠以御笔为蓝本，在铜材上精细雕刻祖钱，全国仅数枚</div>
+    </div>
+    <div class="step">
+      <div class="step-num">叁</div>
+      <div class="step-text"><strong>铸造母钱</strong><br>用雕母翻铸若干铜质母钱，修整打磨后分发至各地钱监</div>
+    </div>
+    <div class="step">
+      <div class="step-num">肆</div>
+      <div class="step-text"><strong>翻砂铸子钱</strong><br>将母钱压入细砂成型，合箱后浇注约一千一百度的熔铜液，冷却打磨后流入市面</div>
+    </div>
+  </div>
+  <div class="fade-up delay-5" style="text-align:center;font-size:13px;color:#5a5040;margin-top:8px;letter-spacing:.1em">
+    你手中的这枚，便诞生于最后一道工序
+  </div>
+</div>
+
+<!-- ═══════ 伍 · 盛世余晖 ═══════ -->
+<div class="section" id="decline">
+  <div class="chapter-num fade-up">伍</div>
+  <div class="chapter-title fade-up delay-1">盛世余晖</div>
+  <div class="chapter-subtitle fade-up delay-2">繁华的背后，大厦将倾</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="decline-grid fade-up delay-3">
+    <div class="decline-card">
+      <div class="icon">📜</div>
+      <div class="label">政治</div>
+      <div class="text">蔡京专权<br>党争不断</div>
+    </div>
+    <div class="decline-card">
+      <div class="icon">🪨</div>
+      <div class="label">财政</div>
+      <div class="text">艮岳花石纲<br>耗尽国库</div>
+    </div>
+    <div class="decline-card">
+      <div class="icon">⚔️</div>
+      <div class="label">军事</div>
+      <div class="text">重文轻武<br>边防空虚</div>
+    </div>
+    <div class="decline-card">
+      <div class="icon">🔥</div>
+      <div class="label">民生</div>
+      <div class="text">赋税沉重<br>民不聊生</div>
+    </div>
+  </div>
+  <div class="decline-quote fade-up delay-4">
+    大观通宝就诞生于这个<br>"表面繁华、内里腐朽"的时代。<br>
+    它是盛世的见证者，也是崩塌的前奏曲。
+  </div>
+</div>
+
+<!-- ═══════ 陆 · 观卦之光 ═══════ -->
+<div class="section" id="yijing">
+  <div class="chapter-num fade-up">陆</div>
+  <div class="chapter-title fade-up delay-1">观卦之光</div>
+  <div class="chapter-subtitle fade-up delay-2">大观，取自《易经》第二十卦</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="yijing-hex fade-up delay-3">
+    <!-- 观卦：上巽（风）下坤（地）= ䷓ -->
+    <div class="yi-line"><div class="yi-yin"><span></span><span></span></div></div>
+    <div class="yi-line"><div class="yi-yin"><span></span><span></span></div></div>
+    <div class="yi-line"><div class="yi-yang"></div></div>
+    <div class="yi-divider"></div>
+    <div class="yi-line"><div class="yi-yang"></div></div>
+    <div class="yi-line"><div class="yi-yang"></div></div>
+    <div class="yi-line"><div class="yi-yang"></div></div>
+  </div>
+  <div style="text-align:center;font-size:11px;color:#5a5a70;letter-spacing:.3em;margin-bottom:16px" class="fade-up delay-3">䷓　风地观　上巽下坤</div>
+  <div class="yijing-classic fade-up delay-4">
+    "大观在上，顺而巽，中正以观天下。"
+  </div>
+  <div class="yijing-text fade-up delay-5">
+    徽宗取此为年号，意在彰显以宏大视野治理天下的雄心。然而历史的讽刺在于——他确实拥有宏大的艺术视野，却在治国上目光短浅。
+  </div>
+  <div class="yijing-hint fade-up delay-6">
+    观卦六四爻辞：<br>
+    <span style="color:#a0a0c0;font-size:clamp(16px,3.5vw,20px)">"观国之光，利用宾于王。"</span><br><br>
+    见识了国家的光辉，便能在人生的殿堂中成为贵客。
+  </div>
+</div>
+
+<!-- ═══════ 柒 · 靖康 ═══════ -->
+<div class="section" id="jingkang" style="background:linear-gradient(180deg,#0a0a0f 0%,#120808 50%,#0a0a0f 100%)">
+  <div class="chapter-num fade-up">柒</div>
+  <div class="chapter-title fade-up delay-1" style="color:#a07060">靖康之变</div>
+  <div class="chapter-subtitle fade-up delay-2" style="color:#6a5040">公元一一二七年，一个王朝的终结</div>
+  <div class="gold-line fade-up delay-2" style="background:linear-gradient(90deg,transparent,#6a4030,transparent)"></div>
+  <div class="emperor-desc fade-up delay-3" style="color:#8a6a5a;max-width:460px">
+    大观四年，年号废止。再过十七年，金兵攻破汴京，掳走徽宗、钦宗二帝，北宋灭亡。
+    <br><br>
+    无数枚大观通宝在这一刻散落——有的随主人逃难，有的被匆匆埋入地下，有的流入金国领土。
+    <br><br>
+    你手中的这一枚，可能就在那一刻被掩埋在泥土之中，开始了它长达九百年的沉睡。
+  </div>
+</div>
+
+<!-- ═══════ 捌 · 沉睡 ═══════ -->
+<div class="section" id="sleep">
+  <div class="chapter-num fade-up">捌</div>
+  <div class="chapter-title fade-up delay-1">九百年</div>
+  <div class="chapter-subtitle fade-up delay-2">一枚钱的沉睡与苏醒</div>
+  <div class="gold-line fade-up delay-2"></div>
+  <div class="sleep-timeline fade-up delay-3">
+    <div class="sleep-dot">
+      <div class="sleep-year">1107</div>
+      <div class="sleep-bar"></div>
+      <div class="sleep-label">铸造成型</div>
+    </div>
+    <div class="sleep-dot">
+      <div class="sleep-year">1107-1127</div>
+      <div class="sleep-bar active" style="width:5%"></div>
+      <div class="sleep-label">民间流通</div>
+    </div>
+    <div class="sleep-dot">
+      <div class="sleep-year">1127</div>
+      <div class="sleep-bar" style="background:linear-gradient(90deg,#6a4030,#3a2020)"></div>
+      <div class="sleep-label">靖康之变</div>
+    </div>
+    <div class="sleep-dot">
+      <div class="sleep-year" style="color:#3a3a40">1127–2000+</div>
+      <div class="sleep-bar" style="width:70%;background:linear-gradient(90deg,#2a2a30 0%,#2a2a30 100%);position:relative">
+        <span style="position:absolute;right:0;top:-8px;font-size:10px;color:#3a3a40">…</span>
+      </div>
+      <div class="sleep-label" style="color:#3a3a40">沉睡地下</div>
+    </div>
+    <div class="sleep-dot">
+      <div class="sleep-year">2000+</div>
+      <div class="sleep-bar active" style="width:10%"></div>
+      <div class="sleep-label">出土重现</div>
+    </div>
+    <div class="sleep-dot">
+      <div class="sleep-year">2026</div>
+      <div class="sleep-bar active" style="width:8%"></div>
+      <div class="sleep-label">到你手中</div>
+    </div>
+  </div>
+  <div class="emperor-desc fade-up delay-4" style="max-width:420px">
+    在地下的九百年里，铜表面缓慢氧化，形成了一层温润自然的包浆。偏重的铜质——四点二克，高于普通的三点五到三点九克——让它更致密、更耐腐蚀。
+    <br><br>
+    这是时间给这枚钱币的礼物。
+  </div>
+</div>
+
+<!-- ═══════ 尾声 ═══════ -->
+<div class="section" id="ending">
+  <div class="fade-up" style="margin-bottom:24px">
+    <div class="coin coin-sm" style="perspective:800px">
+      <div class="coin-hole"></div>
+      <div class="coin-ring"></div>
+      <div class="coin-inner"></div>
+    </div>
+  </div>
+  <div class="ending-poem fade-up delay-1">
+    它是皇帝的艺术品，<br>
+    也是百姓的零花钱。
+  </div>
+  <div class="ending-poem fade-up delay-2" style="margin-top:16px">
+    它见过北宋最后的辉煌，<br>
+    也见证了那个王朝的崩塌。
+  </div>
+  <div class="gold-line fade-up delay-3" style="margin:28px auto"></div>
+  <div class="ending-text fade-up delay-4">
+    九百一十六年后，这四个瘦金体汉字依然清晰如刀刻。铁画银钩之间，是一个帝王的审美、一个时代的光辉、一段跨越千年的旅程。
+  </div>
+  <div class="ending-text fade-up delay-5" style="color:#6a6050;margin-top:16px;font-size:clamp(13px,2.5vw,15px)">
+    值得好好珍藏。
+  </div>
+  <div class="ending-credit fade-up delay-6">
+    大观通宝 · 文化故事 · 2026
+  </div>
+</div>
+
+</div>
+
+<script>
+// Particles
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<25;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const s=Math.random()*3+1;
+    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*8}s;opacity:${Math.random()*0.4+0.1}`;
+    c.appendChild(p);
+  }
+})();
+
+// Scroll animations
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.fade-up,.fade-in').forEach(el=>el.classList.add('visible'));
+      if(e.target.classList.contains('fade-up')||e.target.classList.contains('fade-in'))e.target.classList.add('visible');
+    }
+  });
+},{threshold:0.2});
+
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+// Auto-trigger cover
+setTimeout(()=>{
+  document.querySelectorAll('#cover .fade-up').forEach(el=>el.classList.add('visible'));
+},300);
+</script>
+
+</body>
+</html>
